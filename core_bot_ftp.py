@@ -5,6 +5,7 @@ load_dotenv()  # loads .env file if it exists
 FREECURRENCY_API_KEY = os.environ["FREECURRENCY_API_KEY"]
 TOKEN = os.environ["TG_BOT_TOKEN"]
 
+import json
 import re
 #import requests
 import asyncio
@@ -17,10 +18,13 @@ from aiogram.filters import Command
 from aiogram.client.default import DefaultBotProperties
 import freecurrencyapi
 
-client = freecurrencyapi.Client(FREECURRENCY_API_KEY)
-EUR_curr = client.latest(base_currency='EUR')
-SET_curr = ['USD', 'RUB']
-filtered_curr = {k: v for k, v in EUR_curr['data'].items() if k in SET_curr}
+with open("exchange_rates.json", "r", encoding="utf-8") as f:
+    filtered_curr = json.load(f)
+
+#client = freecurrencyapi.Client(FREECURRENCY_API_KEY)
+#EUR_curr = client.latest(base_currency='EUR')
+#SET_curr = ['USD', 'RUB']
+#filtered_curr = {k: v for k, v in EUR_curr['data'].items() if k in SET_curr}
 
 min_com = 1.1
 max_com = 1.3
