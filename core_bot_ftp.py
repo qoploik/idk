@@ -53,7 +53,7 @@ async def get_price(message: Message):
 async def start_handler(message: Message):
     keyboard = InlineKeyboardMarkup( #!!!
         inline_keyboard=[
-            [InlineKeyboardButton(text="Узнать цену", callback_data="get_price")],
+            [InlineKeyboardButton(text="узнать цены🔮", callback_data="get_price")],
             [InlineKeyboardButton(text="Связь", url="https://t.me/lil_georgii")],
             [InlineKeyboardButton(text="faq", callback_data="faq")]
         ]
@@ -68,8 +68,8 @@ async def start_handler(message: Message):
 async def faq_handler(message: Message):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Ok. Calculate price.", callback_data="get_price")],
-            [InlineKeyboardButton(text="Manager", url="https://t.me/lil_georgii")]
+            [InlineKeyboardButton(text="узнать цены🔮", callback_data="get_price")],
+            [InlineKeyboardButton(text="админ паблика", url="https://t.me/lil_georgii")]
         ]
     )
     await message.answer(
@@ -86,8 +86,8 @@ async def faq_handler(message: Message):
 async def contact_handler(message: Message):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Manager. Again", url="https://t.me/lil_georgii")],
-            [InlineKeyboardButton(text="Посчитать стоимость", callback_data="get_price")],
+            [InlineKeyboardButton(text="админ паблика", url="https://t.me/lil_georgii")],
+            [InlineKeyboardButton(text="посчитать стоимость🔮", callback_data="get_price")],
             [InlineKeyboardButton(text="вопросы и ответы", callback_data="faq")]
         ]
     )
@@ -130,8 +130,7 @@ async def user_input_handler(message: Message):
         else:
             await calculate_price(message, index)
     except ValueError:
-        print(f"Calculation error: {e}")
-        await message.answer(f"B2. Непредвиденная ошибка - напишите менеджеру <code>{index}</code>")
+        await existence_error(message)
         
 
 def parse_index(raw_string: str) -> list[float]:
@@ -169,9 +168,12 @@ async def calculate_price(message: Message, index: list[float]):
     usdt = "{:,.1f}".format(TOTAL * filtered_curr['USD'] * usdt_prem).replace(",", " ")
     SUM_USD = sum(index)*filtered_curr['USD']
     SUM_RUB = sum(index)*filtered_curr['RUB']
-    await message.answer(f"Everything looks good ✅\nValues: {index}\nCount: {len(index)}\n"
-                         f"Sum: {sum(index):.2f}\nSUM_USD: {SUM_USD:.2f}\nSUM_RUB: {SUM_RUB:.2f}"
-                         f", комиссия будет {real_com:.2f}, в рублях вы заплатите {rubles}, а в USDT {usdt}")
+    await message.answer(f"Стоимость вашей покупки составит {sum(index):.2f} EUR,"
+                         f" с учетом комиссии сервиса (+доставка) {real_com:.2f} EUR составит {TOTAL:.2f} EUR.\n"
+                         f"При оплате в рублях будет <i>{rubles} руб.</i>.\n"
+                         f"При оплате в USDT выйдет <i>{usdt} USD</i>")
+
+#уб.</i>,\nПри оплате в USDT выйдет <i>{usdt} USD</i>"
 
 # --- MAIN ENTRYPOINT ---
 async def main():
