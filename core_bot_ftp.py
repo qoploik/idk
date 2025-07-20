@@ -18,7 +18,10 @@ from aiogram.filters import Command
 from aiogram.client.default import DefaultBotProperties
 import freecurrencyapi
 
-with open("exchange_rates.json", "r", encoding="utf-8") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RATES_PATH = os.path.join(BASE_DIR, "exchange_rates.json")
+
+with open(RATES_PATH, "r", encoding="utf-8") as f:
     filtered_curr = json.load(f)
 
 #client = freecurrencyapi.Client(FREECURRENCY_API_KEY)
@@ -169,7 +172,7 @@ async def calculate_price(message: Message, index: list[float]):
     SUM_USD = sum(index)*filtered_curr['USD']
     SUM_RUB = sum(index)*filtered_curr['RUB']
     await message.answer(f"Стоимость вашей покупки составит {sum(index):.2f} EUR,"
-                         f" с учетом комиссии сервиса (+doneдоставка) {real_com:.2f} EUR составит {TOTAL:.2f} EUR.\n"
+                         f" с учетом комиссии сервиса (+доставка) {real_com:.2f} EUR составит {TOTAL:.2f} EUR.\n"
                          f"При оплате в рублях будет <i>{rubles} руб.</i>.\n"
                          f"При оплате в USDT выйдет <i>{usdt} USD</i>")
 
